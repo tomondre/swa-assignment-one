@@ -136,7 +136,7 @@ function CloudCoverage(time, place, value, type, unit) {
 }
 
 function WeatherPrediction(time, place, type, max, min, unit) {
-    let item = Event(time, place, value, type);
+    let item = Event(time, place, type);
     function matches(_time, _place, _max, _min, _type, _unit) {
         return time === _time && place === _place && max === _max && min === _min && type === _type && unit === _unit
     }
@@ -165,8 +165,9 @@ function WeatherPrediction(time, place, type, max, min, unit) {
     };
 }
 
-function TemperaturePrediction(time, place, value, type, max, min, unit) {
-    let item = WeatherPrediction(time, place, value, type, max, min, unit)
+function TemperaturePrediction(time, place, type, max, min, unit) {
+    let item = WeatherPrediction(time, place, type, max, min, unit)
+
     function convertToF() {
         if (unit === "C") {
             return (value * 9/5) + 32;
@@ -183,13 +184,13 @@ function TemperaturePrediction(time, place, value, type, max, min, unit) {
 
     return {
         ...item,
-        convertToF,
-        convertToC
+        // convertToF,
+        // convertToC
     }
 }
 
-function PrecipitationPrediction(time, place, value, type, max, min, unit, expectedType) {
-    let item = WeatherPrediction(time, place, value, type, max, min, unit);
+function PrecipitationPrediction(time, place, type, max, min, unit, expectedType) {
+    let item = WeatherPrediction(time, place, type, max, min, unit);
 
     function matches(_time, _place, _max, _min, _type) {
         return time === _time && place === _place && max === _max && min === _min && type === _type;
@@ -199,19 +200,19 @@ function PrecipitationPrediction(time, place, value, type, max, min, unit, expec
         return expectedType;
     }
 
-    function convertToMPH() {
-        if (unit === "m/s") {
-            return value * 2.237;
-        }
-        return value;
-    }
-
-    function convertToMS() {
-        if (unit === "mph") {
-            return value / 2.237;
-        }
-        return value;
-    }
+    // function convertToMPH() {
+    //     if (unit === "m/s") {
+    //         return value * 2.237;
+    //     }
+    //     return value;
+    // }
+    //
+    // function convertToMS() {
+    //     if (unit === "mph") {
+    //         return value / 2.237;
+    //     }
+    //     return value;
+    // }
 
     function toString() {
         return `${item.toString()}, expectedType: ${expectedType}`
@@ -221,14 +222,14 @@ function PrecipitationPrediction(time, place, value, type, max, min, unit, expec
         ...item,
         getExpectedTypes,
         matches,
-        convertToMPH,
-        convertToMS,
+        // convertToMPH,
+        // convertToMS,
         toString
     };
 }
 
-function WindPrediction(time, place, value, type, max, min, unit, expectedDirections) {
-    let item = WeatherPrediction(time, place, value, type, max, min, unit)
+function WindPrediction(time, place, type, max, min, unit, expectedDirections) {
+    let item = WeatherPrediction(time, place, type, max, min, unit)
     function getExpectedDirections() {
         return expectedDirections;
     }
@@ -243,8 +244,8 @@ function WindPrediction(time, place, value, type, max, min, unit, expectedDirect
     };
 }
 
-function CloudCoveragePrediction(time, place, value, type, max, min) {
-    let weather = WeatherPrediction(time, place, value, type, max, min);
+function CloudCoveragePrediction(time, place, type, max, min) {
+    let weather = WeatherPrediction(time, place, type, max, min);
 
     return {
         ...weather

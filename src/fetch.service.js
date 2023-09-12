@@ -47,7 +47,7 @@ function arrayToMeasurements(arr) {
 function arrayToForecasts(arr) {
     const data = [];
     for (const item of arr) {
-        data.push(buildMeasurementItem(item));
+        data.push(buildForecastItem(item));
     }
     return data;
 }
@@ -57,7 +57,7 @@ function buildForecastItem(item) {
         case 'temperature':
             return new TemperaturePrediction(item.time, item.place, item.type, item.max, item.min, item.unit);
         case 'precipitation':
-            return new PrecipitationPrediction(item.time, item.place, item.type, item.max, item.min, item.unit, item.precipitation_type);
+            return new PrecipitationPrediction(item.time, item.place, item.type, item.max, item.min, item.unit, item.precipitation_types);
         case 'cloud coverage':
             return new CloudCoveragePrediction(item.time, item.place, item.type, item.max, item.min, item.unit);
         case 'wind speed':
