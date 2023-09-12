@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="./src/styling.css" rel="stylesheet">
+    <script src="./src/models.js"></script>
+</head>
+<body>
+    <h1>Insert page: </h1>
+    <div id="cities">
+        <div class="city_tab">
+            <p>Aarhus</p>
+        </div>
+        <div class="city_tab">
+            <p>Horsens</p>
+        </div>
+        <div class="city_tab">
+            <p>Copenhagen</p>
+        </div>
+        <a href="/index.html"><button id="view_page_btn" class="switch_btn">To viewing page!</button></a>
+    </div>
+    <div id="contents">
+        <div class="info_row">
+            <label for="min_temp">Minimum temperature: </label>
+                <input id="min_temp" type="text">
+        </div class="info_row">
+        <div>
+            <label for="max_temp">Maximum temperature:</label>
+                <input id="max_temp" type="text">
+        </div>
+        <div class="info_row">
+            <label for="cloud_coverage">Cloud coverage: </label>
+                <input id="cloud_coverage" type="text">
+        </div>
+        <div class="info_row">
+            <label for="precipitation">Total precipitation: </label>
+                <input id="precipitation" type="text">
+        </div class="info_row">
+        <div>
+            <label for="wind_speed">Average wind speed: </label>
+                <input id="wind_speed" type="text">
+        </div>
+    </div>
+    <button id="update_btn">Update!</button>
+</body>
+</html>
