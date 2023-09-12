@@ -1,0 +1,12 @@
+{
+  "name": "swa-assignment-one",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx -y http-server"
+  },
+  "author": "",
+  "license": "ISC"
+}
