@@ -3,7 +3,7 @@
 The models from assignment does not match the data returned from the api.
 We may have to create custom models and remove the ones below
  */
-function Event(time, place) {
+function Event(time, place, type) {
     function getTime() {
         return time;
     }
@@ -11,68 +11,121 @@ function Event(time, place) {
         return place;
     }
 
-    return {getTime, getPlace}
-}
-
-function WeatherData(time, place, value, type, unit) {
-    let event = Event(time, place);
-    function getValue(){
-        return value;
-    }
     function getType() {
         return type;
     }
 
+    function toString() {
+        return `time: ${time}, place: ${place}, type: ${type}`
+    }
+
+    return {
+        getTime,
+        getPlace,
+        getType,
+        toString
+    }
+}
+
+function WeatherData(time, place, value, type, unit) {
+    let item = Event(time, place, type);
+
     function getUnit() {
         return unit;
     }
+
+    function getValue() {
+        return value;
+    }
+
+    function toString() {
+        return `${item.toString()}, unit: ${unit}`
+    }
+
     return {
-        ...event,
+        ...item,
+        getUnit,
         getValue,
-        getType,
-        getUnit
+        toString
     };
 }
 
 function Temperature(time, place, value, type, unit) {
-    let data = WeatherData(time, place, value, type, unit);
+    let item = WeatherData(time, place, value, type, unit);
 
-    // TODO
     function convertToC() {
-
+        if (unit === "F") {
+            return (value - 32) * (5/9);
+        }
+        return value;
     }
 
     function convertToF() {
+        if (unit === "C") {
+            return (value * 9/5) + 32;
+        }
+        return value;
+    }
 
+    function toString() {
+        return `${item.toString()}, unit: ${unit}`
     }
 
     return {
-        ...data,
+        ...item,
         convertToC,
-        convertToF
+        convertToF,
+        toString
     };
 }
 
 function Precipitation(time, place, value, type, unit, precipitationType) {
-    let weatherData = WeatherData(time, place, value, type, unit)
+    let item = WeatherData(time, place, value, type, unit)
     function getPrecipitationType() {
         return precipitationType;
     }
 
-    // TODO
     function convertToInches() {
-        return ;
+        if (unit === "mm") {
+            return value / 25.4;
+        }
+        return value;
     }
 
     function convertToMM() {
-        return ;
+        if (unit === "inches") {
+            return value * 25.4;
+        }
+        return value;
+    }
+
+    function toString() {
+        return `${item.toString()}, precipitationType: ${precipitationType}`
     }
 
     return {
-        ...weatherData,
+        ...item,
         getPrecipitationType,
         convertToInches,
         convertToMM
+    };
+}
+
+function Wind(time, place, value, type, unit, direction) {
+    let item = WeatherData(time, place, value, type, unit)
+
+    function getDirection() {
+        return direction;
+    }
+
+    function toString() {
+        return `${item.toString()}, direction: ${direction}`
+    }
+
+    return {
+        ...item,
+        getDirection,
+        toString
     };
 }
 
@@ -82,8 +135,8 @@ function CloudCoverage(time, place, value, type, unit) {
     }
 }
 
-function WeatherPrediction(time, place, max, min, type, unit) {
-    let event = Event(time, place);
+function WeatherPrediction(time, place, type, max, min, unit) {
+    let item = Event(time, place, value, type);
     function matches(_time, _place, _max, _min, _type, _unit) {
         return time === _time && place === _place && max === _max && min === _min && type === _type && unit === _unit
     }
@@ -96,42 +149,104 @@ function WeatherPrediction(time, place, max, min, type, unit) {
         return max;
     }
 
-    function getType() {
-        return type;
-    }
-
     function getUnit() {
         return unit;
     }
 
+    function toString() {
+        return `${item.toString()}, max: ${max}, min: ${min}, unit: ${unit}`
+    }
+
     return {
-        ...event,
+        ...item,
         getMax,
         getMin,
-        getType,
         getUnit
     };
 }
 
-function TemperaturePrediction(time, place, max, min, type, unit) {
-    let prediction = WeatherPrediction(time, place, max, min, type, unit)
-    // TODO
+function TemperaturePrediction(time, place, value, type, max, min, unit) {
+    let item = WeatherPrediction(time, place, value, type, max, min, unit)
     function convertToF() {
-
+        if (unit === "C") {
+            return (value * 9/5) + 32;
+        }
+        return value;
     }
 
     function convertToC() {
-
+        if (unit === "F") {
+            return (value - 32) * (5/9);
+        }
+        return value;
     }
 
     return {
-        ...prediction,
+        ...item,
         convertToF,
         convertToC
     }
 }
 
-function PrecipitationPrediction() {
+function PrecipitationPrediction(time, place, value, type, max, min, unit, expectedType) {
+    let item = WeatherPrediction(time, place, value, type, max, min, unit);
 
+    function matches(_time, _place, _max, _min, _type) {
+        return time === _time && place === _place && max === _max && min === _min && type === _type;
+    }
+
+    function getExpectedTypes() {
+        return expectedType;
+    }
+
+    function convertToMPH() {
+        if (unit === "m/s") {
+            return value * 2.237;
+        }
+        return value;
+    }
+
+    function convertToMS() {
+        if (unit === "mph") {
+            return value / 2.237;
+        }
+        return value;
+    }
+
+    function toString() {
+        return `${item.toString()}, expectedType: ${expectedType}`
+    }
+
+    return {
+        ...item,
+        getExpectedTypes,
+        matches,
+        convertToMPH,
+        convertToMS,
+        toString
+    };
 }
 
+function WindPrediction(time, place, value, type, max, min, unit, expectedDirections) {
+    let item = WeatherPrediction(time, place, value, type, max, min, unit)
+    function getExpectedDirections() {
+        return expectedDirections;
+    }
+
+    function toString() {
+        return `${item.toString()}, expectedType: ${expectedDirections}`
+    }
+
+    return {
+        ...item,
+        getExpectedDirections
+    };
+}
+
+function CloudCoveragePrediction(time, place, value, type, max, min) {
+    let weather = WeatherPrediction(time, place, value, type, max, min);
+
+    return {
+        ...weather
+    };
+}
