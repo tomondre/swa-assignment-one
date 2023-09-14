@@ -17,8 +17,14 @@ async function getPredictions() {
     return arrayToForecasts(await res.json());
 }
 
-function sendData() {
-
+function sendFetchData(data) {
+    fetch(`${apiUrl}/data`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
 }
 
 function arrayToMeasurements(arr) {

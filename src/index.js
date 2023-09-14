@@ -93,6 +93,7 @@ function displayMeasurements(city, measurements){
 }
 
 function switchCity(city){
+    selectedCity = city;
     requestPredictions(city);
     requestMeasurements(city);
     removeAllActive();

@@ -4,44 +4,49 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="./src/styling.css" rel="stylesheet">
+    <script src="src/fetch.service.js"></script>
+    <script src="src/xml-http.service.js"></script>
+    <script src="src/insert.js"></script>
     <script src="./src/models.js"></script>
 </head>
 <body>
     <h1>Insert page: </h1>
     <div id="cities">
-        <div class="city_tab">
-            <p>Aarhus</p>
-        </div>
-        <div class="city_tab">
+        <div id="Horsens" class="city_tab active" onclick="switchCity('Horsens')">
             <p>Horsens</p>
         </div>
-        <div class="city_tab">
+        <div id="Aarhus" class="city_tab" onclick="switchCity('Aarhus')">
+            <p>Aarhus</p>
+        </div>
+        <div id="Copenhagen" class="city_tab" onclick="switchCity('Copenhagen')">
             <p>Copenhagen</p>
         </div>
         <a href="/index.html"><button id="view_page_btn" class="switch_btn">To viewing page!</button></a>
+        <p>Use fetch</p>
+        <label class="switch">
+            <input type="checkbox" onchange="changeFetch()">
+            <span class="slider"></span>
+          </label>
+        <p>Use xml-http</p>
     </div>
     <div id="contents">
         <div class="info_row">
-            <label for="min_temp">Minimum temperature: </label>
-                <input id="min_temp" type="text">
+            <label for="temp">Temperature: </label>
+                <input id="temp" type="text">
         </div class="info_row">
-        <div>
-            <label for="max_temp">Maximum temperature:</label>
-                <input id="max_temp" type="text">
-        </div>
         <div class="info_row">
             <label for="cloud_coverage">Cloud coverage: </label>
                 <input id="cloud_coverage" type="text">
         </div>
         <div class="info_row">
-            <label for="precipitation">Total precipitation: </label>
+            <label for="precipitation">Precipitation: </label>
                 <input id="precipitation" type="text">
         </div class="info_row">
         <div>
-            <label for="wind_speed">Average wind speed: </label>
+            <label for="wind_speed">Wind speed: </label>
                 <input id="wind_speed" type="text">
         </div>
     </div>
-    <button id="update_btn">Update!</button>
+    <button id="update_btn" onclick="sendData()">Update!</button>
 </body>
 </html>

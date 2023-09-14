@@ -5,6 +5,7 @@
     <title>Title</title>
     <script src="src/models.js"></script>
     <script src="src/fetch.service.js"></script>
+    <script src="src/xml-http.service.js"></script>
     <script src="src/index.js"></script>
     <link rel="stylesheet" href="src/styling.css">
 </head>
@@ -23,7 +24,7 @@
         <a href="/insert.html"><button id="insert_page_btn" class="switch_btn">To update page!</button></a>
         <p>Use fetch</p>
         <label class="switch">
-            <input type="checkbox" onchange="changeFetch(this)">
+            <input type="checkbox" onchange="changeFetch()">
             <span class="slider"></span>
           </label>
         <p>Use xml-http</p>
