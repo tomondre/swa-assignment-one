@@ -11,60 +11,60 @@
 <body>
     <h1>Viewing page</h1>
     <div id="cities">
-        <div class="city_tab">
-            <p>Aarhus</p>
-        </div>
-        <div class="city_tab">
+        <div id="Horsens" class="city_tab active" onclick="switchCity('Horsens')">
             <p>Horsens</p>
         </div>
-        <div class="city_tab">
+        <div id="Aarhus" class="city_tab" onclick="switchCity('Aarhus')">
+            <p>Aarhus</p>
+        </div>
+        <div id="Copenhagen" class="city_tab" onclick="switchCity('Copenhagen')">
             <p>Copenhagen</p>
         </div>
         <a href="/insert.html"><button id="insert_page_btn" class="switch_btn">To update page!</button></a>
+        <p>Use fetch</p>
+        <label class="switch">
+            <input type="checkbox" onchange="changeFetch(this)">
+            <span class="slider"></span>
+          </label>
+        <p>Use xml-http</p>
     </div>
-    <div id="contents">
-        <h2>Weather forecast: </h2>
-        <div class="info_row">
-            <label for="min_temp_forecast">Minimum temperature: </label>
-                <input id="min_temp_forecast" type="text" disabled>
-        </div class="info_row">
-        <div>
-            <label for="max_temp_forecast">Maximum temperature:</label>
-                <input id="max_temp_forecast" type="text" disabled>
+    <div style="display: flex;">
+        <div id="contents">
+            <h2>Weather forecast: </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="row">Time</th>
+                        <th class="row">Temperature</th>
+                        <th class="row">Precipitation</th>
+                        <th class="row">Wind speed</th>
+                        <th class="row">Cloud coverage</th>
+                    </tr>
+                </thead>
+                <tbody id="forecastTableBody">
+
+                </tbody>
+            </table>
+        
         </div>
-        <div class="info_row">
-            <label for="cloud_coverage_forecast">Cloud coverage: </label>
-                <input id="cloud_coverage_forecast" type="text" disabled>
-        </div>
-        <div class="info_row">
-            <label for="precipitation_forecast">Total precipitation: </label>
-                <input id="precipitation_forecast" type="text" disabled>
-        </div class="info_row">
-        <div>
-            <label for="wind_speed_forecast">Average wind speed: </label>
-                <input id="wind_speed_forecast" type="text" disabled>
-        </div>
-    
-        <h2>Last 24 hours: </h2>
-        <div class="info_row">
-            <label for="min_temp">Minimum temperature: </label>
-                <input id="min_temp" type="text" disabled>
-        </div class="info_row">
-        <div>
-            <label for="max_temp">Maximum temperature:</label>
-                <input id="max_temp" type="text" disabled>
-        </div>
-        <div class="info_row">
-            <label for="cloud_coverage">Cloud coverage: </label>
-                <input id="cloud_coverage" type="text" disabled>
-        </div>
-        <div class="info_row">
-            <label for="precipitation">Total precipitation: </label>
-                <input id="precipitation" type="text" disabled>
-        </div class="info_row">
-        <div>
-            <label for="wind_speed">Average wind speed: </label>
-                <input id="wind_speed" type="text" disabled>
+        <div style="margin-left: 50px;">
+            <h2>Last 24 hours: </h2>
+            <div class="info_row">
+                <label for="min_temp">Minimum temperature: </label>
+                    <input id="min_temp" type="text" disabled>
+            </div class="info_row">
+            <div>
+                <label for="max_temp">Maximum temperature:</label>
+                    <input id="max_temp" type="text" disabled>
+            </div>
+            <div class="info_row">
+                <label for="precipitation">Total precipitation: </label>
+                    <input id="precipitation" type="text" disabled>
+            </div class="info_row">
+            <div>
+                <label for="wind_speed">Average wind speed: </label>
+                    <input id="wind_speed" type="text" disabled>
+            </div>
         </div>
     </div>
 </body>

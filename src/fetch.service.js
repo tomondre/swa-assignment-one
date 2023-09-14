@@ -17,21 +17,6 @@ async function getPredictions() {
     return arrayToForecasts(await res.json());
 }
 
-async function getHourlyForecastFor24Hours() {
-}
-
-async function getLatestMeasurements() {
-
-}
-
-function getMinimumYesterdayTemperature() {
-
-}
-
-function getMaximumYesterdayTemperature() {
-
-}
-
 function sendData() {
 
 }
@@ -55,13 +40,13 @@ function arrayToForecasts(arr) {
 function buildForecastItem(item) {
     switch (item.type) {
         case 'temperature':
-            return new TemperaturePrediction(item.time, item.place, item.type, item.max, item.min, item.unit);
+            return new TemperaturePrediction(item.time, item.place, item.type, item.to, item.from, item.unit);
         case 'precipitation':
-            return new PrecipitationPrediction(item.time, item.place, item.type, item.max, item.min, item.unit, item.precipitation_types);
+            return new PrecipitationPrediction(item.time, item.place, item.type, item.to, item.from, item.unit, item.precipitation_types);
         case 'cloud coverage':
-            return new CloudCoveragePrediction(item.time, item.place, item.type, item.max, item.min, item.unit);
+            return new CloudCoveragePrediction(item.time, item.place, item.type, item.to, item.from, item.unit);
         case 'wind speed':
-            return new WindPrediction(item.time, item.place, item.type, item.max, item.min, item.unit, item.directions);
+            return new WindPrediction(item.time, item.place, item.type, item.to, item.from, item.unit, item.directions);
         default:
             console.error("Unknown measurement type: " + item.type);
             return null;
