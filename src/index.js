@@ -112,7 +112,7 @@ async function requestPredictions(city){
         predictions = await getPredictions();
     }
     else{
-        console.log("Requesting xml predictions");
+        predictions = await getPredictionsXHR();
     }
     displayPredictions(city, predictions);
 }
@@ -123,7 +123,7 @@ async function requestMeasurements(city){
         measurements = await getMeasurements();
     }
     else{
-        console.log("Requesting xml measurements");
+        measurements = await getMeasurementsXHR();
     }
     displayMeasurements(city, measurements);
 }

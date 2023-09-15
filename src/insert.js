@@ -45,7 +45,7 @@ function sendData(){
         sendFetchData(data);
     }
     else{
-        console.log("Sending xml data ", data);
+        sendFetchDataXHR(data);
     }
 }
 
