@@ -42,11 +42,28 @@
             <label for="precipitation">Precipitation: </label>
                 <input id="precipitation" type="text">
         </div class="info_row">
+        <div class="info_row">
+            <label for="precipitation_type">Precipitation type: </label>
+            <select id="precipitation_type">
+                <option value="rain" selected>Rain</option>
+                <option value="hail">Hail</option>
+                <option value="sleet">Sleet</option>
+                <option value="snow">Snow</option>
+            </select> 
+        </div>
         <div>
             <label for="wind_speed">Wind speed: </label>
                 <input id="wind_speed" type="text">
         </div>
-    </div>
+        <div class="info_row">
+            <label for="wind_direction">Wind direction: </label>
+            <select id="wind_direction">
+                <option value="North" selected>North</option>
+                <option value="South">South</option>
+                <option value="East">East</option>
+                <option value="West">West</option>
+            </select> 
+        </div>
     <button id="update_btn" onclick="sendData()">Update!</button>
 </body>
 </html>
