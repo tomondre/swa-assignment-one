@@ -1,12 +1,5 @@
 const apiUrl = "http://localhost:8080"
 
-// •	The hourly forecast for the next 24 hours
-// •	All data for the latest measurement of each kind
-// •	Minimum temperature for the last day
-// •	Maximum temperature for the last day
-// •	Total precipitation for the last day
-// •	Average wind speed for the last day
-
 async function getMeasurements() {
     const res = await fetch(`${apiUrl}/data`);
     return arrayToMeasurements(await res.json());
