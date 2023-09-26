@@ -30,7 +30,7 @@ class GeneratorFake<T> implements Generator<T> {
 
     next(): T {
         let v = this.upcoming.shift()
-        if (v === undefined) 
+        if (v === undefined)
             throw new Error('Empty queue')
         else
             return v
@@ -38,6 +38,7 @@ class GeneratorFake<T> implements Generator<T> {
 
 }
 
+// @ts-ignore
 function require(board: Board<String>) {
     function toEqual(...tiles: String[]) {
         for(let row: number = 0; row < board.height; row++) {
