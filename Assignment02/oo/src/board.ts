@@ -33,6 +33,16 @@ export class Board<T> {
         this.generateGrid();
     }
 
+    positions(): Position[] {
+        const positions: Position[] = [];
+        for (let r = 0; r < this.height; r++) {
+            for (let c = 0; c < this.width; c++) {
+                positions.push({row: r, col: c})
+            }
+        }
+        return positions;
+    }
+
     private generateGrid() {
         for (let h = 0; h < this.height; h++) {
             let row: T[] = [];
@@ -149,6 +159,12 @@ export class Board<T> {
         return first.col === second.col;
     }
 
+    /* Steps
+    1. Find Matches
+    2. Remove all matches
+    3. Drop all the fields from top to bottom
+    4. Refill all the positions from left to right, from bottom to top
+     */
     move(first: Position, second: Position) {
         if (!this.canMove(first, second))
             return;

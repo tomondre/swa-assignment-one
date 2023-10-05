@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
-import { Generator, Board, BoardEvent } from '../src/board'
+import { Generator, Position, Board, BoardEvent } from '../src/board'
 
 class CyclicGenerator implements Generator<string> {
     private sequence: string
@@ -38,16 +38,33 @@ class GeneratorFake<T> implements Generator<T> {
 
 }
 
-// @ts-ignore
 function require(board: Board<String>) {
-    function toEqual(...tiles: String[]) {
-        for(let row: number = 0; row < board.height; row++) {
-            for(let col: number = 0; col < board.width; col ++) {
-                expect(board.piece({row, col})).toEqual(tiles[row * board.width + col])
-            }
-        }
+    function index({row, col}: Position) {
+        return row * board.width + col
     }
-    return { toEqual }
+
+    function toEqual(...tiles: String[]) {
+        board.positions().forEach(p => expect(board.piece(p)).toEqual(tiles[index(p)]) );
+    }
+
+    function toMatch(...tiles: String[]) {
+        const matched: (String | undefined)[] = []
+        board.positions().forEach(p => {
+            if (tiles[index(p)] === '*') {
+                matched.push(board.piece(p))
+            } else {
+                expect(board.piece(p)).toEqual(tiles[index(p)])
+            }
+        })
+
+        function withPieces(...pieces: String[]) {
+            expect(pieces.sort()).toEqual(matched.sort())
+        }
+
+        return { withPieces }
+    }
+
+    return { toEqual, toMatch }
 }
 
 describe("Board", () => {
@@ -62,6 +79,14 @@ describe("Board", () => {
         it("has the given height", () => {
             expect(board.height).toEqual(3)
         })
+
+        it("has row * col positions", () => {
+            const positions = [{row: 0, col: 0}, {row: 0, col: 1},
+                {row: 1, col: 0}, {row: 1, col: 1},
+                {row: 2, col: 0}, {row: 2, col: 1}]
+            expect(board.positions()).toEqual(positions)
+        })
+
         it("contains the generated elements", () => {
             expect(board.piece({row: 0, col: 0})).toEqual('A')
             expect(board.piece({row: 1, col: 1})).toEqual('A')
@@ -70,6 +95,7 @@ describe("Board", () => {
             expect(board.piece({row: 1, col: 0})).toEqual('C')
             expect(board.piece({row: 2, col: 1})).toEqual('C')
         })
+
         it("is undefined outside of the board", () => {
             expect(board.piece({ row: 0, col: -1})).toBeUndefined()
             expect(board.piece({ row: -1, col: 0})).toBeUndefined()
@@ -160,41 +186,45 @@ describe("Board", () => {
             it("finds single horizontal match when moving first piece to a match", () => {
                 generator.prepare('C', 'D', 'A')
                 board.move({row: 2, col: 1}, {row: 0, col: 1})
-                expect(events.slice(0, 1)).toEqual([{kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}}])
+                expect(events).toContainEqual({kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}})
             })
             it("finds single horizontal match when moving second piece to a match", () => {
                 generator.prepare('C', 'D', 'A')
                 board.move({row: 0, col: 1}, {row: 2, col: 1})
-                expect(events.slice(0, 1)).toEqual([{kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}}])
+                expect(events).toContainEqual({kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}})
             })
             it("finds single vertical match when moving first piece to a match", () => {
                 generator.prepare('C', 'D', 'A')
                 board.move({row: 3, col: 3}, {row: 2, col: 3})
-                expect(events.slice(0, 1)).toEqual([{kind: 'Match', match: {matched: 'C', positions: [{row: 0, col: 3}, {row: 1, col: 3}, {row: 2, col: 3}]}}])
+                expect(events).toContainEqual({kind: 'Match', match: {matched: 'C', positions: [{row: 0, col: 3}, {row: 1, col: 3}, {row: 2, col: 3}]}})
             })
             it("finds single vertical match when moving second piece to a match", () => {
                 generator.prepare('C', 'D', 'A')
                 board.move({row: 2, col: 3}, {row: 3, col: 3})
-                expect(events.slice(0, 1)).toEqual([{kind: 'Match', match: {matched: 'C', positions: [{row: 0, col: 3}, {row: 1, col: 3}, {row: 2, col: 3}]}}])
+                expect(events).toContainEqual({kind: 'Match', match: {matched: 'C', positions: [{row: 0, col: 3}, {row: 1, col: 3}, {row: 2, col: 3}]}})
             })
             it("fires multiple events on horz + vert matches", () => {
                 generator.prepare('G', 'H', 'I')
                 generator.prepare('J', 'K', 'L')
                 generator.prepare('J', 'K', 'L')
                 board.move({row: 3, col: 4}, {row: 3, col: 0})
-                expect(events.slice(0, 2)).toEqual([
-                    {kind: 'Match', match: {matched: 'D', positions: [{row: 3, col: 0}, {row: 3, col: 1}, {row: 3, col: 2}]}},
+                expect(events).toContainEqual(
+                    {kind: 'Match', match: {matched: 'D', positions: [{row: 3, col: 0}, {row: 3, col: 1}, {row: 3, col: 2}]}}
+                )
+                expect(events).toContainEqual(
                     {kind: 'Match', match: {matched: 'D', positions: [{row: 1, col: 0}, {row: 2, col: 0}, {row: 3, col: 0}]}},
-                ])
+                )
             })
             it("fires multiple events when both pieces make new matches", () => {
                 generator.prepare('C', 'D', 'A')
                 generator.prepare('B', 'A', 'B')
                 board.move({row: 3, col: 2}, {row: 3, col: 0})
-                expect(events.slice(0, 2)).toEqual([
-                    {kind: 'Match', match: {matched: 'C', positions: [{row: 1, col: 2}, {row: 2, col: 2}, {row: 3, col: 2}]}},
+                expect(events).toContainEqual(
+                    {kind: 'Match', match: {matched: 'C', positions: [{row: 1, col: 2}, {row: 2, col: 2}, {row: 3, col: 2}]}}
+                )
+                expect(events).toContainEqual(
                     {kind: 'Match', match: {matched: 'D', positions: [{row: 1, col: 0}, {row: 2, col: 0}, {row: 3, col: 0}]}},
-                ])
+                )
             })
             it("doesn't swap on illegal moves", () => {
                 generator.prepare('C', 'D', 'A', 'C', 'D', 'A', 'C', 'D', 'A')
@@ -232,32 +262,32 @@ describe("Board", () => {
             it("replaces missing top row with generated tiles", () => {
                 generator.prepare('B', 'C', 'D')
                 board.move({row: 0, col: 1}, {row: 2, col: 1})
-                require(board).toEqual(
-                    'B', 'C', 'D',
+                require(board).toMatch(
+                    '*', '*', '*',
                     'D', 'B', 'C',
                     'D', 'B', 'C',
                     'C', 'D', 'D',
-                )
+                ).withPieces('B', 'C', 'D')
             })
             it("shifts tiles down before replacing", () => {
                 generator.prepare('B', 'C', 'D')
                 board.move({row: 2, col: 0}, {row: 3, col: 0})
-                require(board).toEqual(
-                    'B', 'C', 'D',
+                require(board).toMatch(
+                    '*', '*', '*',
                     'A', 'B', 'A',
                     'D', 'B', 'C',
                     'C', 'A', 'C',
-                )
+                ).withPieces('B', 'C', 'D')
             })
             it("shifts tiles down before replacing multiple matches", () => {
                 generator.prepare('D', 'B', 'C', 'A', 'B', 'A')
                 board.move({row: 3, col: 0}, {row: 3, col: 2})
-                require(board).toEqual(
-                    'B', 'B', 'A',
-                    'C', 'B', 'A',
-                    'D', 'A', 'B',
+                require(board).toMatch(
+                    '*', 'B', '*',
+                    '*', 'B', '*',
+                    '*', 'A', '*',
                     'A', 'D', 'A',
-                )
+                ).withPieces('A', 'A', 'B', 'B', 'C', 'D')
             })
             it("only deletes a double match once", () => {
                 generator = new GeneratorFake<String>(
@@ -269,12 +299,12 @@ describe("Board", () => {
                 board = new Board(generator, 3, 4)
                 generator.prepare('D', 'C', 'B', 'B', 'A')
                 board.move({row: 0, col: 1}, {row: 2, col: 1})
-                require(board).toEqual(
-                    'C', 'A', 'B',
-                    'D', 'B', 'A',
-                    'D', 'D', 'C',
+                require(board).toMatch(
+                    '*', '*', '*',
+                    'D', '*', 'A',
+                    'D', '*', 'C',
                     'C', 'A', 'D',
-                )
+                ).withPieces('A', 'B', 'B', 'C', 'D')
             })
         })
 
@@ -295,7 +325,7 @@ describe("Board", () => {
                 board.addListener(e => events.push(e))
             })
 
-          it("fires refill event after shifting", () => {
+            it("fires refill event after shifting", () => {
                 generator.prepare('B', 'C', 'D')
                 board.move({row: 0, col: 1}, {row: 2, col: 1})
                 expect(events[events.length - 1]).toEqual({ kind: 'Refill' })
