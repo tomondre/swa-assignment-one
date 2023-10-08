@@ -67,20 +67,21 @@ export function canMove<T>(board: Board<T>, first: Position, second: Position): 
     4. Refill all the positions from left to right, from bottom to top
 */
 export function move<T>(generator: Generator<T>, board: Board<T>, first: Position, second: Position): MoveResult<T> {
-    if (!canMove<T>(board, first, second))
+    const copiedBoard = copyBoard<T>(board)
+    if (!canMove<T>(copiedBoard, first, second))
         return {
-            board,
+            board: copiedBoard,
             effects: []
         };
 
-    switchGridPositions<T>(board.grid, first, second);
+    const switchedBoard = switchBoardPositions<T>(copiedBoard, first, second);
 
     const moveResults: MoveResult<T> = {
-        board,
+        board: switchedBoard,
         effects: []
     };
 
-    checkAndHandleMatch<T>(board, generator, moveResults);
+    checkAndHandleMatch<T>(switchedBoard, generator, moveResults);
     return moveResults;
 }
 
@@ -110,19 +111,20 @@ export function positions<T>(board: Board<T>): Position[] {
 }
 
 function switchAndGetMatches<T>(board: Board<T>, first: Position, second: Position): Match<T>[] {
-    // Copy board instead?
-    const gridCopy = copyGrid<T>(board.grid);
+    const newBoard = switchBoardPositions(board, first, second);
 
-    switchGridPositions(gridCopy, first, second);
-
-    return getMatches({
-        grid: gridCopy,
-        width: board.width,
-        height: board.height
-    });
+    return getMatches(newBoard);
 }
 
-function copyGrid<T>(grid: T[][]) {
+function copyBoard<T>(board: Board<T>): Board<T> {
+    return {
+        grid: copyGrid<T>(board.grid),
+        height: board.height,
+        width: board.width
+    };
+}
+
+function copyGrid<T>(grid: T[][]): T[][] {
     const newGrid = [];
     for (let h = 0; h < grid.length; h++) {
         let row: T[] = [];
@@ -134,12 +136,14 @@ function copyGrid<T>(grid: T[][]) {
     return newGrid;
 }
 
-// Has side effect!
-function switchGridPositions<T>(grid: T[][], first: Position, second: Position) {
-    const firstPiece = grid[first.row][first.col];
-    const secondPiece = grid[second.row][second.col];
-    grid[first.row][first.col] = secondPiece;
-    grid[second.row][second.col] = firstPiece;
+
+function switchBoardPositions<T>(board: Board<T>, first: Position, second: Position): Board<T> {
+    const copiedBoard = copyBoard<T>(board)
+    const firstPiece = copiedBoard.grid[first.row][first.col];
+    const secondPiece = copiedBoard.grid[second.row][second.col];
+    copiedBoard.grid[first.row][first.col] = secondPiece;
+    copiedBoard.grid[second.row][second.col] = firstPiece;
+    return copiedBoard;
 }
 
 function getMatches<T>(board: Board<T>): Match<T>[] {
