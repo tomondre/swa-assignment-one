@@ -1,0 +1,34 @@
+import { configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+// import thunk from 'redux-thunk';
+
+import { rootReducer } from './root-reducer';
+
+export type RootState = ReturnType<typeof rootReducer>;
+
+type ExtendedPersistConfig = PersistConfig<RootState> & {
+  whitelist: (keyof RootState)[];
+};
+
+const persistConfig: ExtendedPersistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['user'],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  // added automatically by configureStore
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+  // middleware: [thunk],
+});
+
+export type AppDispatch = typeof store.dispatch;
+
+export const persistor = persistStore(store);
