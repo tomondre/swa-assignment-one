@@ -10,3 +10,7 @@ export type UserDataResponse = {
   id: string;
   admin: boolean;
 } & UserData;
+
+export type UserDataPatch = {
+  id: string;
+} & UserDataRequest;

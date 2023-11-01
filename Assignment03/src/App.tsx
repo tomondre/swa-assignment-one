@@ -4,8 +4,18 @@ import Home from './routes/home';
 import HighScores from './routes/high-scores';
 import Profile from './routes/profile';
 import Play from './routes/play';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('token');
+    if(loggedInUser){
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>

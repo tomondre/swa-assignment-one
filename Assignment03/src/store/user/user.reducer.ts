@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { USER_ACTIONS } from './user.types';
 import { UserDataResponse } from '../../types/user-data';
-import { signUp } from './user.action';
+import { login, signUp } from './user.action';
 
 export type UserState = {
   currentUser: UserDataResponse | null;
@@ -37,6 +37,28 @@ export const userReducer = (state = INITIAL_STATE, action: AnyAction) => {
         loading: false,
         error: action.payload.error,
       };
+      case USER_ACTIONS.LOG_IN:
+        return {
+          ...state,
+          currentUser: action.payload,
+        };
+      case login.pending.type:
+        return {
+          ...state,
+          loading: true,
+        };
+      case login.fulfilled.type:
+        return {
+          ...state,
+          loading: false,
+          currentUser: action.payload,
+        };
+      case login.rejected.type:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
     default:
       return state;
   }
