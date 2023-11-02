@@ -2,13 +2,14 @@ import SignUpForm from '../components/sign-up-form';
 import LoginForm from '../components/login-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import Profile from './profile';
 
 const Home = () => {
   const isLoggedIn = useSelector((state: RootState) => state.user.currentUser);
   
   return (
     <div className="mt-8">
-        {!isLoggedIn && (
+        {!isLoggedIn ? (
           <>
             <h1 className="text-2xl font-bold mb-8">Authentication</h1>
             <div className="flex gap-16">
@@ -16,6 +17,8 @@ const Home = () => {
               <LoginForm />
             </div>
           </>
+        ) : (
+          <Profile />
         )}
     </div>
   );

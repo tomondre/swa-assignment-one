@@ -2,35 +2,39 @@ import { useEffect, useState } from "react";
 import { AppDispatch, RootState } from '../store/store';
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, updateProfile } from "../store/user/user.action";
-import { UserDataPatch, UserDataRequest } from "../types/user-data";
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser : UserData = useSelector((state: RootState) => state.user.currentUser);
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const action = await dispatch(getProfile(currentUser.userId));
-      const response: UserDataRequest = action.payload;
+      const action = await dispatch(getProfile(currentUser));
+      const response: UserData = action.payload;
       setUsername(response.username);
       setPassword(response.password);
     };
-    fetchData();
+      fetchData();
   }, [currentUser]);
 
   const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data: UserDataPatch = { id: currentUser.id, username: username, password: password };
+    const data: UserData = {
+      userId: currentUser.userId, username: username, password: password,
+      token: currentUser.token,
+      admin: false
+    };
     dispatch(updateProfile(data));
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value);
   };
+
   return (
     <div className="flex flex-col gap-2">
       <h2 className="text-xl font-semibold">Profile</h2>
@@ -43,6 +47,7 @@ const Profile = () => {
             type="text"
             className="input input-bordered"
             name="username"
+            value={username}
             disabled= {true}
           />
         </div>

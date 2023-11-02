@@ -1,19 +1,19 @@
-import { useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
-import { RootState } from '../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { AppDispatch, RootState } from '../store/store';
 import { logout } from '../store/user/user.action';
-import { AsyncThunkAction } from '@reduxjs/toolkit';
-import { Dispatch, AnyAction } from 'redux';
+import { Toaster } from 'react-hot-toast';
 
 const Navigation = () => {
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const navigate = useNavigate();
+
+  const currentUser : UserData = useSelector((state: RootState) => state.user.currentUser);
 
   const logOut = () => {
-    const token = JSON.parse(localStorage.getItem('token') || '');
-    if(token){
-      // localStorage.removeItem('token');
-      dispatch(logout(token.requestId));
-    }
+    dispatch(logout(currentUser.token));
+    navigate('/');
   };
 
   return (
@@ -30,9 +30,6 @@ const Navigation = () => {
               <a href="/high-scores" className="btn btn-ghost">
                 High scores
               </a>
-              <a href="/profile" className="btn btn-ghost">
-                Profile
-              </a>
               <a href="/" className="btn btn-ghost" onClick={logOut}>
                 Logout
               </a>
@@ -42,6 +39,7 @@ const Navigation = () => {
             </>
           )}
         </div>
+        <Toaster/>
       </div>
       <Outlet />
     </div>
@@ -49,8 +47,4 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
-function dispatch(arg0: AsyncThunkAction<any, string, { state?: unknown; dispatch?: Dispatch<AnyAction> | undefined; extra?: unknown; rejectValue?: unknown; serializedErrorType?: unknown; pendingMeta?: unknown; fulfilledMeta?: unknown; rejectedMeta?: unknown; }>) {
-  throw new Error('Function not implemented.');
-}
 

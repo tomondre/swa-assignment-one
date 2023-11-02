@@ -1,19 +1,19 @@
 import { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/user/user.action';
-import { UserDataRequest } from '../types/user-data';
 import { AppDispatch } from '../store/store';
 
-const defaultFormFields: UserDataRequest = {
+const defaultFormFields: UserData = {
   username: '',
   password: '',
+  token: '',
+  admin: false
 };
 
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [formFields, setFormFields] =
-  useState<UserDataRequest>(defaultFormFields);
+  const [formFields, setFormFields] = useState<UserData>(defaultFormFields);
   const { username, password } = formFields;
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
@@ -23,8 +23,7 @@ const LoginForm = () => {
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = dispatch(login(formFields));
-    localStorage.setItem('token', JSON.stringify(response));
+    dispatch(login(formFields));
   };
 
   return (

@@ -1,16 +1,7 @@
 type UserData = {
+  userId?: number;
   username: string;
-};
-
-export type UserDataRequest = {
   password: string;
-} & UserData;
-
-export type UserDataResponse = {
-  id: string;
+  token: string;
   admin: boolean;
-} & UserData;
-
-export type UserDataPatch = {
-  id: string;
-} & UserDataRequest;
+};

@@ -1,11 +1,11 @@
 import { AnyAction } from 'redux';
 import { USER_ACTIONS } from './user.types';
-import { UserDataResponse } from '../../types/user-data';
-import { login, signUp } from './user.action';
+import { login, logout, signUp } from './user.action';
 
 export type UserState = {
-  currentUser: UserDataResponse | null;
+  currentUser: UserData | null;
   loading?: boolean;
+  error?: string;
 };
 
 const INITIAL_STATE: UserState = {
@@ -59,6 +59,28 @@ export const userReducer = (state = INITIAL_STATE, action: AnyAction) => {
           loading: false,
           error: action.payload.error,
         };
+        case USER_ACTIONS.LOG_OUT:
+          return {
+            ...state,
+            currentUser: action.payload,
+          };
+        case logout.pending.type:
+          return {
+            ...state,
+            loading: true,
+          };
+        case logout.fulfilled.type:
+          return {
+            ...state,
+            loading: false,
+            currentUser: null,
+          };
+        case logout.rejected.type:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          };
     default:
       return state;
   }
