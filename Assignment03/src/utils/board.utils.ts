@@ -80,7 +80,6 @@ export function move<T>(
 function isPositionOutsideOfGrid<T>(board: Board<T>, p: Position) {
   const result =
     p.col < 0 || p.col >= board.width || p.row < 0 || p.row >= board.height;
-  console.log('result outside of grid: ', result);
 
   return result;
 }

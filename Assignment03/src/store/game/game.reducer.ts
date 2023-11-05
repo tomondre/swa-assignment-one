@@ -1,9 +1,10 @@
 import { AnyAction } from 'redux';
 import { GAME_ACTIONS } from './game.types';
-import { GameData } from '../../types/game-data';
+import { GameDataWithToken } from '../../types/game-data';
+import { startGame, updateGame } from './game.action';
 
 export type GameState = {
-  game: GameData | null;
+  game: GameDataWithToken | null;
   loading?: boolean;
   error?: string;
 };
@@ -20,6 +21,45 @@ export const gameReducer = (state = INITIAL_STATE, action: AnyAction) => {
         ...state,
         game: action.payload,
       };
+      case startGame.pending.type:
+        return{
+          ...state,
+          loading: true,
+        };
+      case startGame.fulfilled.type:
+        return{
+          ...state,
+          loading: false,
+          game: action.payload,
+        };
+      case startGame.rejected.type:
+        return{
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
+    case GAME_ACTIONS.UPDATE_GAME:
+      return {
+        ...state,
+        game: action.payload,
+      };
+      case updateGame.pending.type:
+        return{
+          ...state,
+          loading: true,
+        };
+      case updateGame.fulfilled.type:
+        return{
+          ...state,
+          loading: false,
+          game: action.payload,
+        };
+      case updateGame.rejected.type:
+        return{
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
     default:
       return state;
   }
