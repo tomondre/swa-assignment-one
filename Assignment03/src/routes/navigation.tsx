@@ -14,10 +14,10 @@ const Navigation = () => {
     (state: RootState) => state.user.currentUser
   );
 
-  const logOut = () => {
+  const logOut = async () => {
     if (!currentUser || !currentUser.token) return;
 
-    dispatch(logout(currentUser.token));
+    await dispatch(logout(currentUser.token));
     navigate('/');
   };
 

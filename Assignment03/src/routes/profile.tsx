@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import { AppDispatch, RootState } from '../store/store';
-import { useDispatch, useSelector } from "react-redux";
-import { getProfile, updateProfile } from "../store/user/user.action";
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfile, updateProfile } from '../store/user/user.action';
+import { UserData } from '../types/user-data';
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const currentUser : UserData = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser: UserData = useSelector(
+    (state: RootState) => state.user.currentUser
+  );
 
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,17 +21,19 @@ const Profile = () => {
       setUsername(response.username);
       setPassword(response.password);
     };
-      fetchData();
+    fetchData();
   }, [currentUser]);
 
-  const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data: UserData = {
-      userId: currentUser.userId, username: username, password: password,
+      userId: currentUser.userId,
+      username: username,
+      password: password,
       token: currentUser.token,
-      admin: false
+      admin: false,
     };
-    dispatch(updateProfile(data));
+    await dispatch(updateProfile(data));
   };
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -48,7 +53,7 @@ const Profile = () => {
             className="input input-bordered"
             name="username"
             value={username}
-            disabled= {true}
+            disabled={true}
           />
         </div>
         <div>

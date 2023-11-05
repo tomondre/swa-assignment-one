@@ -22,9 +22,9 @@ const LoginForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login(formFields));
+    await dispatch(login(formFields));
   };
 
   return (
