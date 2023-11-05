@@ -1,13 +1,14 @@
 import { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/user/user.action';
+import { UserData } from '../types/user-data';
 import { AppDispatch } from '../store/store';
 
 const defaultFormFields: UserData = {
   username: '',
   password: '',
   token: '',
-  admin: false
+  admin: false,
 };
 
 const LoginForm = () => {

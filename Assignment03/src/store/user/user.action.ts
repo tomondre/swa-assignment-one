@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { USER_ACTIONS } from './user.types';
+import { UserData } from '../../types/user-data';
 import toast from 'react-hot-toast';
 
 export const signUp = createAsyncThunk(
@@ -9,7 +10,6 @@ export const signUp = createAsyncThunk(
     try {
       const response = await axios.post('http://localhost:9090/users', user);
       console.log('Response for signUp: ', response);
-      toast.success('Sign up successful!');
       return response.data;
     } catch (error) {
       toast.error('Sign up failed!');
@@ -32,12 +32,14 @@ export const login = createAsyncThunk(
     }
   }
 );
-  
+
 export const logout = createAsyncThunk(
   USER_ACTIONS.LOG_OUT,
   async (token: string, thunkAPI) => {
     try {
-      const response = await axios.post(`http://localhost:9090/logout?token=${token}`);
+      const response = await axios.post(
+        `http://localhost:9090/logout?token=${token}`
+      );
       console.log('Response for logout: ', response);
       toast.success('Logout successful!');
       return response.data;
@@ -52,7 +54,9 @@ export const getProfile = createAsyncThunk(
   USER_ACTIONS.GET_PROFILE,
   async (token: UserData, thunkAPI) => {
     try {
-      const response = await axios.get(`http://localhost:9090/users/${token.userId}?token=${token.token}`);
+      const response = await axios.get(
+        `http://localhost:9090/users/${token.userId}?token=${token.token}`
+      );
       console.log('Response for getProfile: ', response);
       return response.data;
     } catch (error) {
@@ -65,7 +69,10 @@ export const updateProfile = createAsyncThunk(
   USER_ACTIONS.UPDATE_PROFILE,
   async (user: UserData, thunkAPI) => {
     try {
-      const response = await axios.patch(`http://localhost:9090/users/${user.userId}?token=${user.token}`, user);
+      const response = await axios.patch(
+        `http://localhost:9090/users/${user.userId}?token=${user.token}`,
+        user
+      );
       console.log('Response for updateProfile: ', response);
       toast.success('Profile updated successfully!');
       return response.data;

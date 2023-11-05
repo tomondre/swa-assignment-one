@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../store/store';
 import { logout } from '../store/user/user.action';
+import { UserData } from '../types/user-data';
 import { Toaster } from 'react-hot-toast';
 
 const Navigation = () => {
@@ -9,9 +10,13 @@ const Navigation = () => {
 
   const navigate = useNavigate();
 
-  const currentUser : UserData = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser: UserData = useSelector(
+    (state: RootState) => state.user.currentUser
+  );
 
   const logOut = () => {
+    if (!currentUser || !currentUser.token) return;
+
     dispatch(logout(currentUser.token));
     navigate('/');
   };
@@ -39,7 +44,7 @@ const Navigation = () => {
             </>
           )}
         </div>
-        <Toaster/>
+        <Toaster />
       </div>
       <Outlet />
     </div>
@@ -47,4 +52,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-

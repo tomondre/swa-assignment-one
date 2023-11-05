@@ -1,7 +1,7 @@
-type UserData = {
+export type UserData = {
   userId?: number;
   username: string;
   password: string;
-  token: string;
-  admin: boolean;
+  token?: string;
+  admin?: boolean;
 };

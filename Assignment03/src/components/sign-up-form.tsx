@@ -1,10 +1,11 @@
 import { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { signUp } from '../store/user/user.action';
-import { UserDataRequest } from '../types/user-data';
+import { signUp, login } from '../store/user/user.action';
+import { UserData } from '../types/user-data';
 import { AppDispatch } from '../store/store';
+import { toast } from 'react-hot-toast';
 
-const defaultFormFields: UserDataRequest = {
+const defaultFormFields: UserData = {
   username: '',
   password: '',
 };
@@ -12,8 +13,7 @@ const defaultFormFields: UserDataRequest = {
 const SignUpForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [formFields, setFormFields] =
-    useState<UserDataRequest>(defaultFormFields);
+  const [formFields, setFormFields] = useState(defaultFormFields);
   const { username, password } = formFields;
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
@@ -21,9 +21,15 @@ const SignUpForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSignUp = (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(signUp(formFields));
+    const response = await dispatch(signUp(formFields));
+
+    if (response.meta.requestStatus === 'fulfilled') {
+      await dispatch(login(response.payload));
+    } else {
+      toast.error('Sign up failed');
+    }
   };
 
   return (
