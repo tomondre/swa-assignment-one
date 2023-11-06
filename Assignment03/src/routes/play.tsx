@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Board, Generator, CyclicGenerator, Position } from '../types/board';
 import { GameData, GameDataWithToken } from '../types/game-data';
 import { create, move } from '../utils/board.utils';
-import { startGame, updateGame } from '../store/game/game.action';
+import { startGame, updateGame, getGame } from '../store/game/game.action';
 import { AppDispatch, RootState } from '../store/store';
 import { UserData } from '../types/user-data';
+import toast from 'react-hot-toast';
 
 const Play = () => {
   const [board, setBoard] = useState<Board<string> | null>(null);
   const [generator] = useState<Generator<string>>(new CyclicGenerator('ABA'));
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [score, setScore] = useState<number>(0);
-  const [numberOfMoves, setNumberOfMoves] = useState<number>(0);
+  const [numberOfMoves, setNumberOfMoves] = useState<number>(9);
   const user: UserData = useSelector(
     (state: RootState) => state.user.currentUser
   );
@@ -27,17 +28,39 @@ const Play = () => {
     async function start(game: GameDataWithToken) {
       await dispatch(startGame(game));
     }
+
+    async function retrieveGame(game: GameDataWithToken) {
+      const action = await dispatch(getGame(game));
+      const response = action.payload as GameDataWithToken;
+      setBoard(response.board);
+      setScore(response.score);
+      setNumberOfMoves(response.numberOfMoves);
+    }
     if (generator && user.userId && user.token) {
       const generatedBoard = create(generator, 8, 7);
       setBoard(generatedBoard);
-      if(!currentGame){
+      if(!currentGame || currentGame.completed){
         start({
           user: user.userId,
           score,
           completed: false,
           token: user.token,
           board: generatedBoard,
+          numberOfMoves: 9,
         });
+      }
+      else if(currentGame && !currentGame.completed){
+        //Get game from server
+        const gameToRetrieve: GameDataWithToken = {
+          user: user.userId,
+          id: currentGame.id,
+          score,
+          completed: false,
+          token: user.token,
+          board: generatedBoard,
+          numberOfMoves: 9,
+        }
+        retrieveGame(gameToRetrieve);
       }
     }
   }, [generator]);
@@ -60,14 +83,21 @@ const Play = () => {
 
       console.log('move result: ', moveResult);
 
-      if (moveResult.effects.length > 0) {
+      if (moveResult.effects.length > 0 && numberOfMoves > 0) {
         const matched = moveResult.effects[0].match;
         if (matched) {
           setScore(score + matched.positions.length + 1);
           setBoard(moveResult.board);
+          setNumberOfMoves(numberOfMoves - 1);
           if(user.token){
-            await dispatch(updateGame({...currentGame, board: moveResult.board, score: score + matched.positions.length + 1, token: user.token}));
+            await dispatch(updateGame({...currentGame, board: moveResult.board, score: score + matched.positions.length + 1, token: user.token, numberOfMoves: numberOfMoves - 1}));
           }
+        }
+      }
+      else{
+        if(user.token){
+          toast.error('Game Over! Start a new game by pressing "PLAY"');
+          await dispatch(updateGame({...currentGame, board: moveResult.board, score: score, token: user.token, completed: true, numberOfMoves: numberOfMoves}));
         }
       }
     }
@@ -84,6 +114,7 @@ const Play = () => {
     <div className="flex flex-col gap-4 items-center">
       <h2 className="text-xl font-semibold">Match3 Game</h2>
       <div className="text-lg">Score: {score}</div>
+      <div className="text-lg">Number of moves left: {numberOfMoves}</div>
       <div className="flex flex-col gap-2">
         {board &&
           board.grid.map((row, rowIndex) => (

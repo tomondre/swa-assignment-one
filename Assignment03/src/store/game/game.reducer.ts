@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { GAME_ACTIONS } from './game.types';
 import { GameDataWithToken } from '../../types/game-data';
-import { startGame, updateGame } from './game.action';
+import { getGame, startGame, updateGame } from './game.action';
 
 export type GameState = {
   game: GameDataWithToken | null;
@@ -55,6 +55,72 @@ export const gameReducer = (state = INITIAL_STATE, action: AnyAction) => {
           game: action.payload,
         };
       case updateGame.rejected.type:
+        return{
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
+    case GAME_ACTIONS.GET_GAME:
+      return {
+        ...state,
+        game: action.payload,
+      };
+      case getGame.pending.type:
+        return{
+          ...state,
+          loading: true,
+        };
+      case getGame.fulfilled.type:
+        return{
+          ...state,
+          loading: false,
+          game: action.payload,
+        };
+      case getGame.rejected.type:
+        return{
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
+    case GAME_ACTIONS.GET_GAME:
+      return {
+        ...state,
+        game: action.payload,
+      };
+      case getGame.pending.type:
+        return{
+          ...state,
+          loading: true,
+        };
+      case getGame.fulfilled.type:
+        return{
+          ...state,
+          loading: false,
+          game: action.payload,
+        };
+      case getGame.rejected.type:
+        return{
+          ...state,
+          loading: false,
+          error: action.payload.error,
+        };
+    case GAME_ACTIONS.GET_GAME:
+      return {
+        ...state,
+        game: action.payload,
+      };
+      case getGame.pending.type:
+        return{
+          ...state,
+          loading: true,
+        };
+      case getGame.fulfilled.type:
+        return{
+          ...state,
+          loading: false,
+          game: action.payload,
+        };
+      case getGame.rejected.type:
         return{
           ...state,
           loading: false,

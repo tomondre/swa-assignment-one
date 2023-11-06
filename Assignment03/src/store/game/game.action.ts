@@ -14,6 +14,7 @@ export const startGame = createAsyncThunk(
         score: game.score,
         completed: game.completed,
         board: game.board,
+        numberOfMoves: game.numberOfMoves,
       }
       const response = await axios.post(
         `http://localhost:9090/games?token=${game.token}`,
@@ -38,6 +39,7 @@ export const updateGame = createAsyncThunk(
         score: game.score,
         completed: game.completed,
         board: game.board,
+        numberOfMoves: game.numberOfMoves,
       }
       const response = await axios.patch(
         `http://localhost:9090/games/${game.id}?token=${game.token}`,
@@ -54,25 +56,36 @@ export const updateGame = createAsyncThunk(
 );
 
 export const getGame = createAsyncThunk(
-  GAME_ACTIONS.UPDATE_GAME,
+  GAME_ACTIONS.GET_GAME,
   async (game: GameDataWithToken, thunkAPI) => {
     try {
-      const newGameData : GameData = {
-        id: game.id,
-        user: game.user,
-        score: game.score,
-        completed: game.completed,
-        board: game.board,
-      }
-      const response = await axios.patch(
-        `http://localhost:9090/games/${game.id}?token=${game.token}`,
-        newGameData
+      const response = await axios.get(
+        `http://localhost:9090/games/${game.id}?token=${game.token}`
       );
-      console.log('Response for updateGame: ', response);
+      console.log('Response for getGame: ', response);
       return response.data;
     } catch (error) {
-      toast.error('Failed to update game!');
+      toast.error('Failed to get game!');
       return thunkAPI.rejectWithValue({ error: (error as Error).message });
     }
   }
 );
+
+export const getGames = createAsyncThunk(
+  GAME_ACTIONS.UPDATE_GAME,
+  async (game: GameDataWithToken, thunkAPI) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9090/games/?token=${game.token}`
+      );
+      console.log('Response for getGames: ', response);
+      return response.data;
+    } catch (error) {
+      toast.error('Failed to get games!');
+      return thunkAPI.rejectWithValue({ error: (error as Error).message });
+    }
+  }
+);
+
+
+
