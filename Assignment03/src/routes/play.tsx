@@ -81,17 +81,18 @@ const Play = () => {
 
       const moveResult = move(generator, board, initialPosition, finalPosition);
 
-      console.log('move result: ', moveResult);
-
       if (moveResult.effects.length > 0 && numberOfMoves > 0) {
-        const matched = moveResult.effects[0].match;
-        if (matched) {
-          setScore(score + matched.positions.length + 1);
-          setBoard(moveResult.board);
-          setNumberOfMoves(numberOfMoves - 1);
-          if(user.token){
-            await dispatch(updateGame({...currentGame, board: moveResult.board, score: score + matched.positions.length + 1, token: user.token, numberOfMoves: numberOfMoves - 1}));
+        let amountOfPoints = 0;
+        moveResult.effects.forEach((effect) => {
+          if(effect && effect.match && effect.kind === 'Match'){
+            amountOfPoints += effect.match.positions.length;
           }
+        })
+        setScore(score + amountOfPoints);
+        setBoard(moveResult.board);
+        setNumberOfMoves(numberOfMoves - 1);
+        if(user.token){
+          await dispatch(updateGame({...currentGame, board: moveResult.board, score: score + amountOfPoints, token: user.token, numberOfMoves: numberOfMoves - 1}));
         }
       }
       else{
@@ -101,13 +102,6 @@ const Play = () => {
         }
       }
     }
-  };
-
-  const dragEnd = (event: React.DragEvent<HTMLDivElement>) => {
-    console.log('dragEnd: ', {
-      row: event.currentTarget.getAttribute('data-row-id'),
-      col: event.currentTarget.getAttribute('data-id'),
-    });
   };
 
   return (
@@ -142,8 +136,7 @@ const Play = () => {
                   onDragLeave={(e: DragEvent<HTMLDivElement>) =>
                     e.preventDefault()
                   }
-                  onDrop={dragDrop}
-                  onDragEnd={dragEnd}>
+                  onDrop={dragDrop}>
                   {/* {cell} */}
                 </div>
               ))}

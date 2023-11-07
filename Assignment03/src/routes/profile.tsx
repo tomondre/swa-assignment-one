@@ -21,7 +21,9 @@ const Profile = () => {
       setUsername(response.username);
       setPassword(response.password);
     };
-    fetchData();
+    if(currentUser.userId && currentUser.token){
+      fetchData();
+    }
   }, [currentUser]);
 
   const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,7 +71,7 @@ const Profile = () => {
             onChange={handleChange}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary w-fit">
           Update
         </button>
       </form>

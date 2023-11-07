@@ -55,7 +55,6 @@ export function move<T>(
   const copiedBoard = copyBoard<T>(board);
 
   if (!canMove<T>(copiedBoard, first, second)) {
-    console.log('CANT MOVE ');
 
     return {
       board: copiedBoard,
