@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 const Play = () => {
   const [board, setBoard] = useState<Board<string> | null>(null);
-  const [generator] = useState<Generator<string>>(new CyclicGenerator('ABA'));
+  const [generator] = useState<Generator<string>>(new CyclicGenerator('ABCD'));
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [score, setScore] = useState<number>(0);
   const [numberOfMoves, setNumberOfMoves] = useState<number>(9);
@@ -123,7 +123,7 @@ const Play = () => {
                       ? 'bg-red-400'
                       : cell === 'B'
                       ? 'bg-green-400'
-                      : 'bg-blue-400'
+                      : cell === 'C' ? 'bg-blue-400' : 'bg-yellow-400'
                   }`}
                   draggable={true}
                   onDragStart={dragStart}
