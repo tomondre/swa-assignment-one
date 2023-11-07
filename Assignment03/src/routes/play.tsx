@@ -10,10 +10,10 @@ import toast from 'react-hot-toast';
 
 const Play = () => {
   const [board, setBoard] = useState<Board<string> | null>(null);
-  const [generator] = useState<Generator<string>>(new CyclicGenerator('ABCD'));
+  const [generator] = useState<Generator<string>>(new CyclicGenerator('ABCDA'));
   const [initialPosition, setInitialPosition] = useState<Position | null>(null);
   const [score, setScore] = useState<number>(0);
-  const [numberOfMoves, setNumberOfMoves] = useState<number>(9);
+  const [numberOfMoves, setNumberOfMoves] = useState<number>(10);
   const user: UserData = useSelector(
     (state: RootState) => state.user.currentUser
   );
@@ -46,7 +46,7 @@ const Play = () => {
           completed: false,
           token: user.token,
           board: generatedBoard,
-          numberOfMoves: 9,
+          numberOfMoves: 10,
         });
       }
       else if(currentGame && !currentGame.completed){
@@ -58,12 +58,28 @@ const Play = () => {
           completed: false,
           token: user.token,
           board: generatedBoard,
-          numberOfMoves: 9,
+          numberOfMoves: 10,
         }
         retrieveGame(gameToRetrieve);
       }
     }
+
   }, [generator]);
+  
+  useEffect(() => {
+    async function endGame(){
+      if(user.token){
+        await dispatch(updateGame({...currentGame, score: score, token: user.token, completed: true, numberOfMoves: numberOfMoves}));
+      }
+    }
+
+    if(numberOfMoves === 0){
+      if(user.token){
+        toast.error('Game Over! Start a new game by pressing "PLAY"');
+        endGame();
+      }
+    }
+  }, [numberOfMoves]);
 
   const dragStart = (event: React.DragEvent<HTMLDivElement>) => {
     setInitialPosition({
@@ -93,12 +109,6 @@ const Play = () => {
         setNumberOfMoves(numberOfMoves - 1);
         if(user.token){
           await dispatch(updateGame({...currentGame, board: moveResult.board, score: score + amountOfPoints, token: user.token, numberOfMoves: numberOfMoves - 1}));
-        }
-      }
-      else{
-        if(user.token){
-          toast.error('Game Over! Start a new game by pressing "PLAY"');
-          await dispatch(updateGame({...currentGame, board: moveResult.board, score: score, token: user.token, completed: true, numberOfMoves: numberOfMoves}));
         }
       }
     }
