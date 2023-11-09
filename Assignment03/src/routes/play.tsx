@@ -24,18 +24,29 @@ const Play = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  async function start(game: GameDataWithToken) {
+    await dispatch(startGame(game));
+  }
   useEffect(() => {
-    async function start(game: GameDataWithToken) {
-      await dispatch(startGame(game));
-    }
 
     async function retrieveGame(game: GameDataWithToken) {
       const action = await dispatch(getGame(game));
       const response = action.payload as GameDataWithToken;
-      setBoard(response.board);
+      if(!response.board){
+        const generatedBoard = create(generator, 8, 7);
+        setBoard(generatedBoard);
+      }else{
+        setBoard(response.board);
+      }
       setScore(response.score);
-      setNumberOfMoves(response.numberOfMoves);
+      if(response.numberOfMoves){
+        setNumberOfMoves(response.numberOfMoves);
+      }
+      else{
+        setNumberOfMoves(10);
+      }
     }
+
     if (generator && user.userId && user.token) {
       const generatedBoard = create(generator, 8, 7);
       setBoard(generatedBoard);
@@ -63,7 +74,6 @@ const Play = () => {
         retrieveGame(gameToRetrieve);
       }
     }
-
   }, [generator]);
   
   useEffect(() => {
@@ -80,6 +90,23 @@ const Play = () => {
       }
     }
   }, [numberOfMoves]);
+
+  const startNewGame = async () => {
+    const generatedBoard = create(generator, 8, 7);
+    setBoard(generatedBoard);
+    if(generator && user.userId && user.token){
+      start({
+        user: user.userId,
+        score,
+        completed: false,
+        token: user.token,
+        board: generatedBoard,
+        numberOfMoves: 10,
+      });
+      setScore(0);
+      setNumberOfMoves(10);
+  }
+}
 
   const dragStart = (event: React.DragEvent<HTMLDivElement>) => {
     setInitialPosition({
@@ -120,6 +147,7 @@ const Play = () => {
       <div className="text-lg">Score: {score}</div>
       <div className="text-lg">Number of moves left: {numberOfMoves}</div>
       <div className="flex flex-col gap-2">
+        {numberOfMoves === 0 && <button className='btn btn-primary' onClick={startNewGame}>Start new game!</button>}
         {board &&
           board.grid.map((row, rowIndex) => (
             <div key={rowIndex} className="flex flex-row gap-2">

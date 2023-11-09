@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '../store/store';
 import { logout } from '../store/user/user.action';
 import { UserData } from '../types/user-data';
@@ -25,22 +25,22 @@ const Navigation = () => {
     <div className="max-w-6xl mx-auto">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <a className="btn btn-ghost normal-case text-xl" href="/">
+          <Link className="btn btn-ghost normal-case text-xl" to="/">
             Match3 Game
-          </a>
+          </Link>
         </div>
         <div className="flex-none flex gap-4">
           {currentUser && (
             <>
-              <a href="/high-scores" className="btn btn-ghost">
+              <Link to="/high-scores" className="btn btn-ghost">
                 High scores
-              </a>
-              <a href="/" className="btn btn-ghost" onClick={logOut}>
+              </Link>
+              <Link to="/" className="btn btn-ghost" onClick={logOut}>
                 Logout
-              </a>
-              <a href="/play" className="btn btn-primary">
+              </Link>
+              <Link to="/play" className="btn btn-primary">
                 Play
-              </a>
+              </Link>
             </>
           )}
         </div>
