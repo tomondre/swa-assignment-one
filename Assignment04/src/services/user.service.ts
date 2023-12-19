@@ -3,6 +3,7 @@ import axios from 'axios';
 export async function signUp(username: string, password: string) {
     try{
         const response = await axios.post('http://localhost:9090/users', {username, password});
+        console.log("Sign up successful: ", response.data);
         return response.data;
     }
     catch(error){

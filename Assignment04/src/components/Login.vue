@@ -1,47 +1,58 @@
     <script>
+      import { defineComponent, reactive } from 'vue';
       import { login } from '../services/user.service'
-      import { ref } from 'vue';
 
-      const username = ref('');
-      const password = ref('');
+      export default defineComponent({
+        name: 'LoginForm',
+        setup() {
+          const formFields = reactive({
+            username: '',
+            password: ''
+          })
+          const handleLogin = async() => {
+            const response = await login(formFields.username, formFields.password);
+            if(response){
+              this.$router.replace({ path: '/profile' });
+            }
+          }
 
-      async function submit() {
-        await login(username.value, password.value);
-        console.log("Logging in... ", username.value, password.value);
-      }
-
-
+          return {
+            formFields,
+            handleLogin
+          }
+        }
+      })
     </script>
 
   <template>
-    <div className="flex flex-col gap-2">
-      <h2 className="text-xl font-semibold">Log In</h2>
-      <form @submit.prevent="submit" className="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <h2 class="text-xl font-semibold">Log In</h2>
+      <form @submit.prevent="handleLogin" class="flex flex-col gap-4">
         <div>
-          <label className="label">
-              <span className="label-text">Username</span>
+          <label class="label">
+              <span class="label-text">Username</span>
             </label>
           <input 
             type="text" 
-            className="input input-bordered"
+            class="input input-bordered"
             placeholder="Enter your username"
             name="username"
-            v-model="username" 
+            v-model="formFields.username" 
           />
         </div>
         <div>
-          <label className="label">
-            <span className="label-text">Password</span>
+          <label class="label">
+            <span class="label-text">Password</span>
           </label>
           <input
             type="password"
-            className="input input-bordered"
+            class="input input-bordered"
             placeholder="Enter your username"
             name="password"
-            v-model="password" 
+            v-model="formFields.password" 
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
           Log In
         </button>
       </form>

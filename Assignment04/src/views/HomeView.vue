@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script>
 import SignUpForm from '../components/SignUpForm.vue'
 import Login from '../components/Login.vue'
 </script>

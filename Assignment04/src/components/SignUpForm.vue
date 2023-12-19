@@ -12,11 +12,13 @@ export default defineComponent({
     })
 
     const handleSignUp = async () => {
-      console.log('Sign up successful: ', formFields.username, formFields.password);
       if(formFields.username && formFields.password){
         const response = await signUp(formFields.username, formFields.password);
-        if(response.meta.requestStatus === 'fulfilled'){
-          await login(formFields.username, formFields.password);
+        if(response){
+          const authenticated = await login(formFields.username, formFields.password);
+          if(authenticated){
+            this.$router.replace({ path: '/profile' });
+          }
         }
         else{
           console.log("Sign up failed");
