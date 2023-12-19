@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import UserAuth from '../components/UserAuth.vue'
+import SignUpForm from '../components/SignUpForm.vue'
 </script>
 
 <template>
-  <main>
-    <UserAuth />
+  <main class="flex gap-16">
+    <SignUpForm />
   </main>
 </template>
