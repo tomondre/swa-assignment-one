@@ -29,3 +29,13 @@ export async function login(username: string, password: string) {
 export function persistUser(username: string, token: string){
     localStorage.setItem("user", JSON.stringify({username, token}));
 }
+
+export function authenticated(){
+    const user = localStorage.getItem("user");
+    if(user){
+        return true;
+    }
+    else{
+        return false;
+    }
+}

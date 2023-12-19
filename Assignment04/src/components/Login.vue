@@ -9,10 +9,13 @@
             username: '',
             password: ''
           })
+
           const handleLogin = async() => {
-            const response = await login(formFields.username, formFields.password);
-            if(response){
-              this.$router.replace({ path: '/profile' });
+            if(formFields.username && formFields.password){
+              const response = await login(formFields.username, formFields.password);
+              if(response){
+                this.$router.push('/profile');
+              }
             }
           }
 
@@ -52,9 +55,7 @@
             v-model="formFields.password" 
           />
         </div>
-        <button type="submit" class="btn btn-primary">
-          Log In
-        </button>
+        <button type="submit" class="btn btn-primary">Log In</button>
       </form>
     </div>
   </template>

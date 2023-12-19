@@ -17,7 +17,7 @@ export default defineComponent({
         if(response){
           const authenticated = await login(formFields.username, formFields.password);
           if(authenticated){
-            this.$router.replace({ path: '/profile' });
+            this.$router.push('/profile');
           }
         }
         else{
