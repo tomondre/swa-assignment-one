@@ -1,9 +1,12 @@
-    <script setup lang="ts">
+    <script>
+      import { login } from '../services/user.service'
       import { ref } from 'vue';
+
       const username = ref('');
       const password = ref('');
 
       async function submit() {
+        await login(username.value, password.value);
         console.log("Logging in... ", username.value, password.value);
       }
 

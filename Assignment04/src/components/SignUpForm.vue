@@ -1,5 +1,7 @@
-<script lang="ts">
+<script>
 import { defineComponent, reactive } from 'vue'
+import { signUp } from '../services/user.service'
+import { login } from '../services/user.service'
 
 export default defineComponent({
   name: 'SignUpForm',
@@ -10,7 +12,20 @@ export default defineComponent({
     })
 
     const handleSignUp = async () => {
-      console.log('Sign up successful: ', formFields.username, formFields.password)
+      console.log('Sign up successful: ', formFields.username, formFields.password);
+      if(formFields.username && formFields.password){
+        const response = await signUp(formFields.username, formFields.password);
+        if(response.meta.requestStatus === 'fulfilled'){
+          await login(formFields.username, formFields.password);
+        }
+        else{
+          console.log("Sign up failed");
+        }
+        console.log(response);
+      }
+      else{
+        console.log("Please enter a username and password");
+      }
     }
 
     return {
