@@ -75,7 +75,7 @@ export const getGame = createAsyncThunk(
 );
 
 export const getGames = createAsyncThunk(
-  GAME_ACTIONS.UPDATE_GAME,
+  GAME_ACTIONS.GET_GAMES,
   async (token: string, thunkAPI) => {
     try {
       const response = await axios.get(

@@ -85,7 +85,6 @@ export const gameReducer = (state = INITIAL_STATE, action: AnyAction) => {
     case GAME_ACTIONS.GET_GAMES:
       return {
         ...state,
-        game: action.payload,
       };
     case getGames.pending.type:
       return {
@@ -96,7 +95,6 @@ export const gameReducer = (state = INITIAL_STATE, action: AnyAction) => {
       return {
         ...state,
         loading: false,
-        game: action.payload,
       };
     case getGames.rejected.type:
       return {
