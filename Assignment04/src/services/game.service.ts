@@ -35,3 +35,26 @@ export async function startGame(game: GameDataWithToken) {
     //
   }
 }
+
+export async function updateGame(game: GameDataWithToken) {
+  try {
+    const newGameData: GameData = {
+      id: game.id,
+      user: game.user,
+      score: game.score,
+      completed: game.completed,
+      board: game.board,
+      numberOfMoves: game.numberOfMoves
+    }
+    const response = await axios.patch(
+      `http://localhost:9090/games/${game.id}?token=${game.token}`,
+      newGameData
+    )
+    console.log('Response for updateGame: ', JSON.parse(response.config.data))
+    const gameData: GameData = JSON.parse(response.config.data)
+    return gameData
+  } catch (error) {
+    // toast.error('Failed to update game!');
+    console.log('Failed to update game!', error)
+  }
+}
