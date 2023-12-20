@@ -164,7 +164,7 @@ export default defineComponent({
             :data-row-id="rowIndex"
             :data-id="cellIndex"
             :class="[
-              'w-12 h-12 bg-base-300 rounded-md',
+              'w-12 h-12 bg-base-300 rounded-md cell_style',
               cell === 'A'
                 ? 'bg-red-400'
                 : cell === 'B'
@@ -187,3 +187,9 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<style scoped>
+  .cell_style {
+    margin-bottom: 7.5px;
+  }
+</style>

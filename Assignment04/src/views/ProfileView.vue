@@ -38,7 +38,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 form">
       <h2 class="text-xl font-semibold">Profile</h2>
       <form class="flex flex-col gap-4" @submit.prevent="handleUpdate">
         <div>
@@ -65,7 +65,14 @@ export default defineComponent({
             placeholder="Enter your password"
           />
         </div>
-        <button type="submit" class="btn btn-primary w-fit">Update</button>
+        <button style="width: auto;" type="submit" class="btn btn-primary w-fit">Update</button>
       </form>
     </div>
 </template>
+
+<style scoped>
+  .form {
+    display: flex;
+    align-items: center;
+  }
+</style>

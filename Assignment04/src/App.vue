@@ -29,14 +29,12 @@ export default{
 </script>
 
 <template>
-  <header>
+  <header style="display: flex; justify-content: center;">
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink v-show="auth" to="/high-scores">High Scores</RouterLink>
-        <RouterLink v-show="auth" to="/play">Play</RouterLink>
+      <nav style="display: flex;">
         <RouterLink v-show="auth" to="/profile">Profile</RouterLink>
+        <RouterLink v-show="auth" to="/play">Play</RouterLink>
+        <RouterLink v-show="auth" to="/high-scores">High Scores</RouterLink>
         <button v-show="auth" v-on:click="handleLogout()" class="btn btn-primary">Log out</button>
       </nav>
     </div>
