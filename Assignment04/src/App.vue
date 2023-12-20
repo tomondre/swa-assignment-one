@@ -1,18 +1,31 @@
-<script lang="ts">
+<script>
 import { defineComponent, reactive } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
-import {authenticated} from './services/user.service'
+import { authState, authenticated, logout } from './services/user.service'
+import router from './router'
 
-export default defineComponent({
+export default{
   name: 'App',
-  setup() {
-    const auth = authenticated();
+  data() {
     return {
-      auth
+      auth: false,
     }
-  }
-
-})
+  },
+  beforeMount() {
+    authState.getState().subscribe((state) => {
+      this.auth = state;
+    });
+    authenticated();
+  },
+  methods: {
+    handleLogout() {
+      const token = JSON.parse(localStorage.getItem('user')).token;
+      logout(token);
+      localStorage.removeItem('user');
+      router.push('/');
+    }
+  },
+}
 </script>
 
 <template>
@@ -21,10 +34,10 @@ export default defineComponent({
       <HelloWorld msg="You did it!" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
         <RouterLink v-show="auth" to="/high-scores">High Scores</RouterLink>
         <RouterLink v-show="auth" to="/play">Play</RouterLink>
         <RouterLink v-show="auth" to="/profile">Profile</RouterLink>
+        <button v-show="auth" v-on:click="handleLogout()" class="btn btn-primary">Log out</button>
       </nav>
     </div>
   </header>
