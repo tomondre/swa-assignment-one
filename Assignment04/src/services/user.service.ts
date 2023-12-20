@@ -47,6 +47,31 @@ export async function logout(token : string) {
     }
 }
 
+export async function getProfile(token : string, userId : number) {
+    try {
+        const response = await axios.get(
+          `http://localhost:9090/users/${userId}?token=${token}`
+        );
+        console.log('Response for getProfile: ', response);
+        return response.data;
+      } catch (error) {
+
+      }
+}
+
+export async function updateProfile(token : string, userId : number, user : any) {
+    try {
+        const response = await axios.patch(
+          `http://localhost:9090/users/${userId}?token=${token}`,
+          user
+        );
+        console.log('Response for updateProfile: ', response);
+        return response.data;
+      } catch (error) {
+
+      }
+}
+
 export function persistUser(username: string, token: string){
     localStorage.setItem("user", JSON.stringify({username, token}));
 }

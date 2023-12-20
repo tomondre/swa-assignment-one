@@ -1,7 +1,6 @@
 <script>
 import { defineComponent, reactive } from 'vue'
-import { signUp } from '../services/user.service'
-import { login } from '../services/user.service'
+import { signUp, login, getProfile, updateProfile } from '../services/user.service'
 
 export default defineComponent({
   name: 'ProfileForm',
@@ -13,7 +12,8 @@ export default defineComponent({
 
     const handleUpdate = async () => {
       if(formFields.username && formFields.password){
-        const response = await updateProfile(formFields.username, formFields.password);
+        const user = JSON.parse(localStorage.getItem('user'));
+        const response = await updateProfile(user.token, user.userId, {username : formFields.username, password: formFields.password});
         console.log(response);
       }
       else{
@@ -25,7 +25,15 @@ export default defineComponent({
       formFields,
       handleUpdate
     }
-  }
+  },
+  async beforeMount() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await getProfile(user.token, user.userId);
+    if(response){
+      this.formFields.username = response.username;
+      this.formFields.password = response.password;
+    }
+  },
 })
 </script>
 
