@@ -134,14 +134,17 @@ export default defineComponent({
           this.score = this.score + amountOfPoints
           this.board = moveResult.board
           this.numberOfMoves = this.numberOfMoves - 1
+          if(this.numberOfMoves === 0){
+            this.currentGame.completed = true
+          }
           if (this.user.token) {
             await updateGame({
               ...this.currentGame,
               board: moveResult.board,
-              score: this.score + amountOfPoints,
+              score: this.score,
               token: this.user.token,
-              numberOfMoves: this.numberOfMoves - 1,
-              // completed: this.completed,
+              numberOfMoves: this.numberOfMoves,
+              completed: this.currentGame.completed,
               user: this.user.userId
             } as GameDataWithToken)
           }
