@@ -1,14 +1,37 @@
-import axios from 'axios';
-import { Subject } from 'rxjs';
+import axios from 'axios'
+import type { GameData, GameDataWithToken } from '@/types/game-data'
+import { Subject } from 'rxjs'
 
-export async function getGame(gameId : number, token : string) {
-    try {
-        const response = await axios.get(
-          `http://localhost:9090/games/${gameId}?token=${token}`
-        );
-        console.log('Response for getGame: ', response);
-        return response.data;
-    } catch (error) {
+export async function getGame(gameId: number, token: string) {
+  try {
+    const response = await axios.get(`http://localhost:9090/games/${gameId}?token=${token}`)
+    console.log('Response for getGame: ', response)
+    return response.data
+  } catch (error) {
+    //
+  }
+}
 
+export async function startGame(game: GameDataWithToken) {
+  try {
+    const newGameData: GameData = {
+      id: game.id,
+      user: game.user,
+      score: game.score,
+      completed: game.completed,
+      board: game.board,
+      numberOfMoves: game.numberOfMoves
     }
-};
+
+    console.log('pass to server: ', newGameData)
+
+    const response = await axios.post(
+      `http://localhost:9090/games?token=${game.token}`,
+      newGameData
+    )
+    console.log('Response for startGame: ', response)
+    return response.data
+  } catch (error) {
+    //
+  }
+}
