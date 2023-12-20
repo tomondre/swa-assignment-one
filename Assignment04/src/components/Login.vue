@@ -1,4 +1,4 @@
-    <script>
+    <script lang="ts">
       import { defineComponent, reactive } from 'vue';
       import { login } from '../services/user.service'
 
@@ -14,7 +14,7 @@
             if(formFields.username && formFields.password){
               const response = await login(formFields.username, formFields.password);
               if(response){
-                this.$router.push('/profile');
+                // this.$router.push('/profile');
               }
             }
           }

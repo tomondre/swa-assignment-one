@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { signUp } from '../services/user.service'
 import { login } from '../services/user.service'
@@ -17,7 +17,7 @@ export default defineComponent({
         if(response){
           const authenticated = await login(formFields.username, formFields.password);
           if(authenticated){
-            this.$router.push('/profile');
+            // this.$router.push('/profile');
           }
         }
         else{

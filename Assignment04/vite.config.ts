@@ -10,7 +10,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: tag => ['HelloWorld', 'SignUpForm', 'Login'].includes(tag),
+          // isCustomElement: tag => ['HelloWorld', 'SignUpForm', 'Login'].includes(tag),
         }
       }
     }),
