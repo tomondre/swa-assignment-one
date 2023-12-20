@@ -2,6 +2,7 @@
 import { defineComponent, reactive } from 'vue'
 import { signUp } from '../services/user.service'
 import { login } from '../services/user.service'
+import router from '../router'
 
 export default defineComponent({
   name: 'SignUpForm',
@@ -17,7 +18,7 @@ export default defineComponent({
         if(response){
           const authenticated = await login(formFields.username, formFields.password);
           if(authenticated){
-            // this.$router.push('/profile');
+            router.push('/profile');
           }
         }
         else{

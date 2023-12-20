@@ -1,5 +1,18 @@
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent, reactive } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
+import {authenticated} from './services/user.service'
+
+export default defineComponent({
+  name: 'App',
+  setup() {
+    const auth = authenticated();
+    return {
+      auth
+    }
+  }
+
+})
 </script>
 
 <template>
@@ -9,9 +22,9 @@ import { RouterLink, RouterView } from 'vue-router'
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/high-scores">High Scores</RouterLink>
-        <RouterLink to="/play">Play</RouterLink>
-        <RouterLink to="/profile">Profile</RouterLink>
+        <RouterLink v-show="auth" to="/high-scores">High Scores</RouterLink>
+        <RouterLink v-show="auth" to="/play">Play</RouterLink>
+        <RouterLink v-show="auth" to="/profile">Profile</RouterLink>
       </nav>
     </div>
   </header>
