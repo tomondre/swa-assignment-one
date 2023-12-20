@@ -1,6 +1,5 @@
 import axios from 'axios'
 import type { GameData, GameDataWithToken } from '@/types/game-data'
-import { Subject } from 'rxjs'
 
 export async function getGame(gameId: number, token: string) {
   try {
@@ -11,6 +10,37 @@ export async function getGame(gameId: number, token: string) {
     //
   }
 }
+
+export async function getOverallBestGames(token: string): Promise<GameData[]> {
+  try {
+    const response = await axios.get(`http://localhost:9090/games?token=${token}`)
+    const res = [];
+    response.data.map((game: GameData) => {
+      if (game.completed) {
+        res.push(game);
+      }
+    })
+    return res
+  } catch (error) {
+  //
+  }
+}
+
+export async function getPersonalBestGames(userId: number, token: string): Promise<GameData[]> {
+  try {
+    const response = await axios.get(`http://localhost:9090/games?token=${token}`)
+    const res = [];
+    response.data.map((game: GameData) => {
+      if (game.completed && game.user === userId) {
+        res.push(game);
+      }
+    })
+    return res;
+  } catch (error) {
+    //
+  }
+}
+
 
 export async function startGame(game: GameDataWithToken) {
   try {

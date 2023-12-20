@@ -30,9 +30,11 @@ export default defineComponent({
     } as TData
   },
   async beforeMount() {
-    const currentUser = JSON.parse(localStorage.getItem('user')!)
-    const lastGame = JSON.parse(localStorage.getItem('game')!)
-    if (lastGame) {
+    const currentUserStr = localStorage.getItem('user');
+    const lastGameStr = localStorage.getItem('game');
+    if (currentUserStr && lastGameStr) {
+      const currentUser = JSON.parse(currentUserStr);
+      const lastGame = JSON.parse(lastGameStr)
       const response = await getGame(lastGame.id, currentUser.token)
 
       if (response.board) {

@@ -24,6 +24,7 @@ export async function login(username: string, password: string) {
         const response = await axios.post('http://localhost:9090/login', {username, password});
         if(response.data.token){
             localStorage.setItem("user", JSON.stringify(response.data));
+            localStorage.setItem("game", "");
             return response.data;
         }
         console.log("Login failed: ", response.data);
