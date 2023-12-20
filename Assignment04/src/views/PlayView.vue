@@ -30,15 +30,25 @@ export default defineComponent({
     } as TData
   },
   async beforeMount() {
-    const lastGame = JSON.parse(localStorage.getItem('game')!)
     const currentUser = JSON.parse(localStorage.getItem('user')!)
+    const lastGame = JSON.parse(localStorage.getItem('game')!)
     if (lastGame) {
       const response = await getGame(lastGame.id, currentUser.token)
 
-      if (response) {
+      if (response.board) {
         this.board = response.board
         this.numberOfMoves = response.numberOfMoves
         this.score = response.score
+
+        this.currentGame = {
+          board: response.board,
+          id: response.id,
+          completed: response.completed,
+          score: response.score,
+          user: response.user,
+          numberOfMoves: response.numberOfMoves,
+          token: response.user.token!
+        }
       } else {
         //Create new game
         this.board = await this.createNewGame()
@@ -68,8 +78,6 @@ export default defineComponent({
 
       const response = await startGame(newBoard)
 
-      console.log('new game: ', response)
-
       this.currentGame = {
         board: newBoard.board,
         id: response.id,
@@ -81,28 +89,12 @@ export default defineComponent({
       }
 
       this.board = newBoard.board
+      this.score = 0
+      this.numberOfMoves = 10
 
       localStorage.setItem('game', JSON.stringify(this.currentGame))
 
       return board
-    },
-
-    async startNewGame() {
-      const generatedBoard = create(this.generator, 6, 6)
-      this.board = generatedBoard
-
-      if (this.generator && this.user.userId && this.user.token) {
-        await startGame({
-          user: this.user.userId,
-          score: this.score,
-          completed: false,
-          token: this.user.token,
-          board: generatedBoard,
-          numberOfMoves: 10
-        })
-        this.score = 0
-        this.numberOfMoves = 10
-      }
     },
 
     dragStart(event: DragEvent) {
@@ -161,7 +153,7 @@ export default defineComponent({
     <div class="text-lg">Score: {{ score }}</div>
     <div class="text-lg">Number of moves left: {{ numberOfMoves }}</div>
     <div class="flex flex-col gap-2">
-      <button v-if="numberOfMoves === 0" class="btn btn-primary" v-on:click="startNewGame">
+      <button v-if="numberOfMoves === 0" class="btn btn-primary" v-on:click="createNewGame">
         Start new game!
       </button>
       <div v-if="board">
