@@ -4,7 +4,7 @@ import { signUp } from '../services/user.service'
 import { login } from '../services/user.service'
 
 export default defineComponent({
-  name: 'SignUpForm',
+  name: 'ProfileForm',
   setup() {
     const formFields = reactive({
       username: '',
@@ -14,12 +14,6 @@ export default defineComponent({
     const handleUpdate = async () => {
       if(formFields.username && formFields.password){
         const response = await updateProfile(formFields.username, formFields.password);
-        if(response){
-          await login(formFields.username, formFields.password);
-        }
-        else{
-          console.log("Sign up failed");
-        }
         console.log(response);
       }
       else{

@@ -1,11 +1,11 @@
 <script>
 import SignUpForm from '../components/SignUpForm.vue'
-import Login from '../components/Login.vue'
+import LoginForm from '../components/Login.vue'
 </script>
 
 <template>
   <main class="flex gap-16">
     <SignUpForm />
-    <Login />
+    <LoginForm />
   </main>
 </template>
